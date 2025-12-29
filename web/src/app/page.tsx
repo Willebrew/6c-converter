@@ -52,214 +52,167 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-black text-white">
       <div className="min-h-screen flex flex-col">
         {/* Header */}
-        <header className="pt-8 pb-4 px-4 sm:pt-12 sm:pb-6">
-          <div className="max-w-xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500 mb-4 sm:mb-6">
-              <svg
-                className="w-8 h-8 sm:w-10 sm:h-10 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
-                />
-              </svg>
-            </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-3 tracking-tight">
-              6C TOC Tag Decoder
-            </h1>
-            <p className="text-slate-400 text-sm sm:text-base">
-              Decode ISO 18000-6C toll transponder tags
+        <header className="pt-12 pb-6 px-4 sm:pt-16 sm:pb-8">
+          <div className="max-w-lg mx-auto">
+            <p className="text-xs font-mono text-neutral-500 uppercase tracking-widest mb-3">
+              ISO 18000-6C
             </p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight">
+              6C TOC Decoder
+            </h1>
           </div>
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 px-4 pb-8">
-          <div className="max-w-xl mx-auto">
-            {/* Input Card */}
-            <div className="bg-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-700">
-              <form onSubmit={handleSubmit}>
-                <label
-                  htmlFor="hex"
-                  className="block text-sm font-medium text-slate-300 mb-2 sm:mb-3"
-                >
-                  Hex Value
-                </label>
+        <main className="flex-1 px-4 pb-12">
+          <div className="max-w-lg mx-auto">
+            {/* Input */}
+            <form onSubmit={handleSubmit} className="mb-8">
+              <div className="relative">
                 <input
                   type="text"
                   id="hex"
                   value={hex}
                   onChange={(e) => setHex(e.target.value.toUpperCase())}
-                  placeholder="Enter 24 or 28 character hex..."
-                  className="w-full px-4 py-3 sm:py-4 bg-slate-900 border border-slate-600 rounded-xl text-white font-mono text-sm sm:text-base placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  placeholder="Enter hex value"
+                  className="w-full px-0 py-4 bg-transparent border-0 border-b border-neutral-800 text-white text-lg sm:text-xl font-mono placeholder-neutral-600 focus:outline-none focus:border-white transition-colors"
                   spellCheck={false}
                   autoComplete="off"
                   autoCapitalize="characters"
                 />
-                <div className="flex gap-3 mt-4">
+              </div>
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-white hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 text-black font-medium py-3 px-6 text-sm uppercase tracking-wider transition-colors"
+                >
+                  {loading ? "Decoding..." : "Decode"}
+                </button>
+                {(result || error || hex) && (
                   <button
-                    type="submit"
-                    disabled={loading}
-                    className="flex-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-600 text-white font-semibold py-3 sm:py-4 px-6 rounded-xl transition-colors"
+                    type="button"
+                    onClick={clearForm}
+                    className="px-6 py-3 border border-neutral-800 hover:border-neutral-600 text-neutral-400 hover:text-white text-sm uppercase tracking-wider transition-colors"
                   >
-                    {loading ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                            fill="none"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          />
-                        </svg>
-                        Decoding
-                      </span>
-                    ) : (
-                      "Decode"
-                    )}
+                    Clear
                   </button>
-                  {(result || error || hex) && (
-                    <button
-                      type="button"
-                      onClick={clearForm}
-                      className="px-4 sm:px-6 py-3 sm:py-4 bg-slate-700 hover:bg-slate-600 text-slate-300 font-medium rounded-xl transition-colors"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-              </form>
-            </div>
+                )}
+              </div>
+            </form>
 
             {/* Error */}
             {error && (
-              <div className="mt-4 sm:mt-6 p-4 bg-red-900 border border-red-700 rounded-xl sm:rounded-2xl">
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-5 h-5 mt-0.5">
-                    <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <p className="text-red-300 text-sm sm:text-base">{error}</p>
-                </div>
+              <div className="mb-8 py-4 border-l-2 border-white pl-4">
+                <p className="text-neutral-300 text-sm">{error}</p>
               </div>
             )}
 
             {/* Results */}
             {result && (
-              <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6">
+              <div className="space-y-8">
                 {/* Primary Result */}
-                <div className="bg-emerald-900 border border-emerald-700 rounded-xl sm:rounded-2xl p-4 sm:p-6">
-                  <p className="text-emerald-300 text-xs sm:text-sm font-medium uppercase tracking-wider mb-1 sm:mb-2">
-                    Decoded Tag Number
+                <div className="py-6 border-t border-neutral-800">
+                  <p className="text-xs font-mono text-neutral-500 uppercase tracking-widest mb-2">
+                    Tag Number
                   </p>
-                  <p className="text-2xl sm:text-3xl md:text-4xl font-mono font-bold text-white tracking-wider">
+                  <p className="text-3xl sm:text-4xl md:text-5xl font-mono font-light tracking-wider">
                     {result.printedNumber}
                   </p>
                 </div>
 
-                {/* Details Card */}
-                <div className="bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-700 overflow-hidden">
-                  {/* Agency Section */}
-                  <div className="p-4 sm:p-6 border-b border-slate-700">
-                    <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
-                      Agency Information
-                    </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <InfoItem
-                        label="Agency"
-                        value={`${result.agencyInfo[0]}`}
-                        subvalue={result.agencyInfo[1]}
-                      />
-                      <InfoItem label="Region" value={result.agencyInfo[2]} />
-                      <InfoItem label="Agency Code" value={result.agencyCode.toString()} />
-                      <InfoItem
-                        label="Serial Number"
-                        value={result.transponderSerialNumber.toLocaleString()}
-                      />
+                {/* Agency */}
+                <div className="grid grid-cols-2 gap-x-8 gap-y-6 py-6 border-t border-neutral-800">
+                  <div className="col-span-2 sm:col-span-1">
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Agency</p>
+                    <p className="text-lg font-medium">{result.agencyInfo[0]}</p>
+                    <p className="text-sm text-neutral-400">{result.agencyInfo[1]}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Region</p>
+                    <p className="text-lg">{result.agencyInfo[2]}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Agency Code</p>
+                    <p className="text-lg font-mono">{result.agencyCode}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Serial</p>
+                    <p className="text-lg font-mono">{result.transponderSerialNumber.toLocaleString()}</p>
+                  </div>
+                </div>
+
+                {/* Details */}
+                <div className="grid grid-cols-2 gap-x-8 gap-y-6 py-6 border-t border-neutral-800">
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Check Digit</p>
+                    <p className="text-lg font-mono">{result.checkDigit}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Version</p>
+                    <p className="text-lg">{result.versionDescription}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">HOV</p>
+                    <p className="text-lg">{result.hovDescription}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Hash</p>
+                    <p className="text-lg font-mono">
+                      {result.uiiValidationHash.toString(16).toUpperCase().padStart(4, "0")}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Classification */}
+                {result.classification.assigned && (
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-6 py-6 border-t border-neutral-800">
+                    <p className="col-span-2 text-xs text-neutral-500 uppercase tracking-wider mb-2">
+                      Vehicle Classification
+                    </p>
+                    <div>
+                      <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Type</p>
+                      <p className="text-lg">{result.classification.vehicleType}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Axles</p>
+                      <p className="text-lg font-mono">{result.classification.axles}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Weight</p>
+                      <p className="text-lg">{result.classification.weight}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">Rear Tires</p>
+                      <p className="text-lg">{result.classification.rearTires}</p>
                     </div>
                   </div>
+                )}
 
-                  {/* Tag Details Section */}
-                  <div className="p-4 sm:p-6 border-b border-slate-700">
-                    <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
-                      Tag Details
-                    </h3>
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                      <InfoItem label="Check Digit" value={`${result.checkDigit}`} subvalue="Luhn" />
-                      <InfoItem label="Version" value={result.versionDescription} />
-                      <InfoItem label="HOV Status" value={result.hovDescription} />
-                      <InfoItem
-                        label="UII Hash"
-                        value={`0x${result.uiiValidationHash.toString(16).toUpperCase().padStart(4, "0")}`}
-                        mono
-                      />
+                {/* Raw */}
+                <div className="py-6 border-t border-neutral-800">
+                  <p className="text-xs text-neutral-500 uppercase tracking-wider mb-4">Raw Data</p>
+                  <div className="space-y-3 font-mono text-sm">
+                    <div className="flex flex-col sm:flex-row sm:gap-4">
+                      <span className="text-neutral-500 w-20 shrink-0">Barcode</span>
+                      <span className="text-white break-all">{result.barcodeContent}</span>
                     </div>
-                  </div>
-
-                  {/* Classification Section */}
-                  {result.classification.assigned && (
-                    <div className="p-4 sm:p-6 border-b border-slate-700">
-                      <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
-                        Vehicle Classification
-                      </h3>
-                      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                        <InfoItem label="Type" value={result.classification.vehicleType} />
-                        <InfoItem label="Axles" value={result.classification.axles.toString()} />
-                        <InfoItem label="Weight" value={result.classification.weight} />
-                        <InfoItem label="Rear Tires" value={result.classification.rearTires} />
-                      </div>
+                    <div className="flex flex-col sm:flex-row sm:gap-4">
+                      <span className="text-neutral-500 w-20 shrink-0">UII</span>
+                      <span className="text-neutral-400 break-all">{result.uii}</span>
                     </div>
-                  )}
-
-                  {/* Raw Data Section */}
-                  <div className="p-4 sm:p-6 bg-slate-900">
-                    <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
-                      Raw Data
-                    </h3>
-                    <div className="space-y-2">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                        <span className="text-xs text-slate-500 sm:w-20">Barcode:</span>
-                        <code className="text-xs sm:text-sm font-mono text-emerald-400 break-all">
-                          {result.barcodeContent}
-                        </code>
+                    {result.pcBits && (
+                      <div className="flex flex-col sm:flex-row sm:gap-4">
+                        <span className="text-neutral-500 w-20 shrink-0">PC</span>
+                        <span className="text-neutral-400">{result.pcBits}</span>
                       </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                        <span className="text-xs text-slate-500 sm:w-20">UII:</span>
-                        <code className="text-xs sm:text-sm font-mono text-slate-300 break-all">
-                          {result.uii}
-                        </code>
-                      </div>
-                      {result.pcBits && (
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                          <span className="text-xs text-slate-500 sm:w-20">PC Bits:</span>
-                          <code className="text-xs sm:text-sm font-mono text-slate-300">
-                            {result.pcBits}
-                          </code>
-                        </div>
-                      )}
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                        <span className="text-xs text-slate-500 sm:w-20">DSFID:</span>
-                        <code className="text-xs sm:text-sm font-mono text-slate-300">
-                          0x{result.dsfid.toString(16).toUpperCase()}
-                        </code>
-                      </div>
+                    )}
+                    <div className="flex flex-col sm:flex-row sm:gap-4">
+                      <span className="text-neutral-500 w-20 shrink-0">DSFID</span>
+                      <span className="text-neutral-400">0x{result.dsfid.toString(16).toUpperCase()}</span>
                     </div>
                   </div>
                 </div>
@@ -269,36 +222,12 @@ export default function Home() {
         </main>
 
         {/* Footer */}
-        <footer className="py-6 px-4">
-          <p className="text-center text-xs sm:text-sm text-slate-500">
-            Based on 6C TOC AVI Standard v3.1 Rev 1
+        <footer className="py-8 px-4 border-t border-neutral-900">
+          <p className="max-w-lg mx-auto text-xs text-neutral-600 font-mono">
+            6C TOC AVI Standard v3.1
           </p>
         </footer>
       </div>
-    </div>
-  );
-}
-
-function InfoItem({
-  label,
-  value,
-  subvalue,
-  mono = false,
-}: {
-  label: string;
-  value: string;
-  subvalue?: string;
-  mono?: boolean;
-}) {
-  return (
-    <div>
-      <p className="text-xs text-slate-500 mb-0.5 sm:mb-1">{label}</p>
-      <p className={`text-sm sm:text-base text-white ${mono ? "font-mono" : ""}`}>
-        {value}
-      </p>
-      {subvalue && (
-        <p className="text-xs text-slate-400 mt-0.5">{subvalue}</p>
-      )}
     </div>
   );
 }
