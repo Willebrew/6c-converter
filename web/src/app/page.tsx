@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Decoded6CTOC } from "@/lib/decoder";
-import { SAMPLE_TAGS } from "@/lib/constants";
 
 export default function Home() {
   const [hex, setHex] = useState("");
@@ -46,201 +45,260 @@ export default function Home() {
     decode(hex);
   };
 
-  const handleSampleClick = (sampleHex: string) => {
-    setHex(sampleHex);
-    decode(sampleHex);
+  const clearForm = () => {
+    setHex("");
+    setResult(null);
+    setError(null);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-2xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="min-h-screen flex flex-col">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            6C TOC Tag Decoder
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Decode ISO 18000-6C toll transponder tags
-          </p>
-        </div>
-
-        {/* Input Form */}
-        <form onSubmit={handleSubmit} className="mb-6">
-          <div className="mb-4">
-            <label
-              htmlFor="hex"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >
-              Enter hex value (24 or 28 characters)
-            </label>
-            <input
-              type="text"
-              id="hex"
-              value={hex}
-              onChange={(e) => setHex(e.target.value.toUpperCase())}
-              placeholder="31B03E9400000407500001561F98"
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-              spellCheck={false}
-              autoComplete="off"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-          >
-            {loading ? "Decoding..." : "Decode"}
-          </button>
-        </form>
-
-        {/* Sample Tags */}
-        <div className="mb-8">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            Try a sample:
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {SAMPLE_TAGS.map((sample, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleSampleClick(sample.hex)}
-                className="px-3 py-1.5 text-xs font-mono bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+        <header className="pt-8 pb-4 px-4 sm:pt-12 sm:pb-6">
+          <div className="max-w-xl mx-auto text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-500 mb-4 sm:mb-6 shadow-lg shadow-emerald-500/25">
+              <svg
+                className="w-8 h-8 sm:w-10 sm:h-10 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                {sample.hex.slice(0, 12)}...
-              </button>
-            ))}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                />
+              </svg>
+            </div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-3 tracking-tight">
+              6C TOC Tag Decoder
+            </h1>
+            <p className="text-slate-400 text-sm sm:text-base">
+              Decode ISO 18000-6C toll transponder tags
+            </p>
           </div>
-        </div>
+        </header>
 
-        {/* Error */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
-          </div>
-        )}
-
-        {/* Results */}
-        {result && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            {/* Decoded Number */}
-            <div className="p-6 bg-green-50 dark:bg-green-900/20 border-b border-gray-200 dark:border-gray-700">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Decoded Tag Number
-              </p>
-              <p className="text-2xl font-mono font-bold text-gray-900 dark:text-white">
-                {result.printedNumber}
-              </p>
+        {/* Main Content */}
+        <main className="flex-1 px-4 pb-8">
+          <div className="max-w-xl mx-auto">
+            {/* Input Card */}
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-700/50 shadow-xl">
+              <form onSubmit={handleSubmit}>
+                <label
+                  htmlFor="hex"
+                  className="block text-sm font-medium text-slate-300 mb-2 sm:mb-3"
+                >
+                  Hex Value
+                </label>
+                <input
+                  type="text"
+                  id="hex"
+                  value={hex}
+                  onChange={(e) => setHex(e.target.value.toUpperCase())}
+                  placeholder="Enter 24 or 28 character hex..."
+                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white font-mono text-sm sm:text-base placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all"
+                  spellCheck={false}
+                  autoComplete="off"
+                  autoCapitalize="characters"
+                />
+                <div className="flex gap-3 mt-4">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold py-3 sm:py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-500/25 disabled:shadow-none"
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                            fill="none"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          />
+                        </svg>
+                        Decoding
+                      </span>
+                    ) : (
+                      "Decode"
+                    )}
+                  </button>
+                  {(result || error || hex) && (
+                    <button
+                      type="button"
+                      onClick={clearForm}
+                      className="px-4 sm:px-6 py-3 sm:py-4 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 font-medium rounded-xl transition-all"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </form>
             </div>
 
-            {/* Details Grid */}
-            <div className="p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <DetailRow
-                  label="Agency"
-                  value={`${result.agencyInfo[0]} - ${result.agencyInfo[1]}`}
-                />
-                <DetailRow label="State/Region" value={result.agencyInfo[2]} />
-                <DetailRow
-                  label="Agency Code"
-                  value={result.agencyCode.toString()}
-                />
-                <DetailRow
-                  label="Serial Number"
-                  value={result.transponderSerialNumber.toString()}
-                />
-                <DetailRow
-                  label="Check Digit"
-                  value={`${result.checkDigit} (Luhn)`}
-                />
-                <DetailRow label="Version" value={result.versionDescription} />
-                <DetailRow label="HOV Declaration" value={result.hovDescription} />
-                <DetailRow
-                  label="UII Hash"
-                  value={`0x${result.uiiValidationHash.toString(16).toUpperCase().padStart(4, "0")}`}
-                />
+            {/* Error */}
+            {error && (
+              <div className="mt-4 sm:mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl sm:rounded-2xl">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-5 h-5 mt-0.5">
+                    <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <p className="text-red-400 text-sm sm:text-base">{error}</p>
+                </div>
               </div>
+            )}
 
-              {/* Classification */}
-              {result.classification.assigned && (
-                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
-                    Vehicle Classification
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <DetailRow
-                      label="Type"
-                      value={result.classification.vehicleType}
-                    />
-                    <DetailRow
-                      label="Axles"
-                      value={result.classification.axles.toString()}
-                    />
-                    <DetailRow label="Weight" value={result.classification.weight} />
-                    <DetailRow
-                      label="Rear Tires"
-                      value={result.classification.rearTires}
-                    />
+            {/* Results */}
+            {result && (
+              <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6">
+                {/* Primary Result */}
+                <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+                  <p className="text-emerald-400/80 text-xs sm:text-sm font-medium uppercase tracking-wider mb-1 sm:mb-2">
+                    Decoded Tag Number
+                  </p>
+                  <p className="text-2xl sm:text-3xl md:text-4xl font-mono font-bold text-white tracking-wider">
+                    {result.printedNumber}
+                  </p>
+                </div>
+
+                {/* Details Card */}
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-700/50 overflow-hidden">
+                  {/* Agency Section */}
+                  <div className="p-4 sm:p-6 border-b border-slate-700/50">
+                    <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
+                      Agency Information
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                      <InfoItem
+                        label="Agency"
+                        value={`${result.agencyInfo[0]}`}
+                        subvalue={result.agencyInfo[1]}
+                      />
+                      <InfoItem label="Region" value={result.agencyInfo[2]} />
+                      <InfoItem label="Agency Code" value={result.agencyCode.toString()} />
+                      <InfoItem
+                        label="Serial Number"
+                        value={result.transponderSerialNumber.toLocaleString()}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Tag Details Section */}
+                  <div className="p-4 sm:p-6 border-b border-slate-700/50">
+                    <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
+                      Tag Details
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                      <InfoItem label="Check Digit" value={`${result.checkDigit}`} subvalue="Luhn" />
+                      <InfoItem label="Version" value={result.versionDescription} />
+                      <InfoItem label="HOV Status" value={result.hovDescription} />
+                      <InfoItem
+                        label="UII Hash"
+                        value={`0x${result.uiiValidationHash.toString(16).toUpperCase().padStart(4, "0")}`}
+                        mono
+                      />
+                    </div>
+                  </div>
+
+                  {/* Classification Section */}
+                  {result.classification.assigned && (
+                    <div className="p-4 sm:p-6 border-b border-slate-700/50">
+                      <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
+                        Vehicle Classification
+                      </h3>
+                      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                        <InfoItem label="Type" value={result.classification.vehicleType} />
+                        <InfoItem label="Axles" value={result.classification.axles.toString()} />
+                        <InfoItem label="Weight" value={result.classification.weight} />
+                        <InfoItem label="Rear Tires" value={result.classification.rearTires} />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Raw Data Section */}
+                  <div className="p-4 sm:p-6 bg-slate-900/30">
+                    <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
+                      Raw Data
+                    </h3>
+                    <div className="space-y-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                        <span className="text-xs text-slate-500 sm:w-20">Barcode:</span>
+                        <code className="text-xs sm:text-sm font-mono text-emerald-400 break-all">
+                          {result.barcodeContent}
+                        </code>
+                      </div>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                        <span className="text-xs text-slate-500 sm:w-20">UII:</span>
+                        <code className="text-xs sm:text-sm font-mono text-slate-300 break-all">
+                          {result.uii}
+                        </code>
+                      </div>
+                      {result.pcBits && (
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                          <span className="text-xs text-slate-500 sm:w-20">PC Bits:</span>
+                          <code className="text-xs sm:text-sm font-mono text-slate-300">
+                            {result.pcBits}
+                          </code>
+                        </div>
+                      )}
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                        <span className="text-xs text-slate-500 sm:w-20">DSFID:</span>
+                        <code className="text-xs sm:text-sm font-mono text-slate-300">
+                          0x{result.dsfid.toString(16).toUpperCase()}
+                        </code>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              )}
-
-              {/* Barcode */}
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <DetailRow
-                  label="Barcode Content"
-                  value={result.barcodeContent}
-                  mono
-                />
               </div>
-
-              {/* Raw Data */}
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <p className="text-xs text-gray-500 dark:text-gray-500 mb-2">
-                  Raw Data
-                </p>
-                <div className="space-y-1">
-                  <p className="text-xs font-mono text-gray-600 dark:text-gray-400">
-                    UII: {result.uii}
-                  </p>
-                  {result.pcBits && (
-                    <p className="text-xs font-mono text-gray-600 dark:text-gray-400">
-                      PC: {result.pcBits}
-                    </p>
-                  )}
-                  <p className="text-xs font-mono text-gray-600 dark:text-gray-400">
-                    DSFID: 0x{result.dsfid.toString(16).toUpperCase()}
-                  </p>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
-        )}
+        </main>
 
         {/* Footer */}
-        <p className="text-center text-xs text-gray-500 dark:text-gray-500 mt-8">
-          Based on 6C TOC AVI Standard v3.1 Rev 1 (ISO 18000-6C/63)
-        </p>
+        <footer className="py-6 px-4">
+          <p className="text-center text-xs sm:text-sm text-slate-500">
+            Based on 6C TOC AVI Standard v3.1 Rev 1
+          </p>
+        </footer>
       </div>
     </div>
   );
 }
 
-function DetailRow({
+function InfoItem({
   label,
   value,
+  subvalue,
   mono = false,
 }: {
   label: string;
   value: string;
+  subvalue?: string;
   mono?: boolean;
 }) {
   return (
     <div>
-      <p className="text-xs text-gray-500 dark:text-gray-500">{label}</p>
-      <p
-        className={`text-sm text-gray-900 dark:text-white ${mono ? "font-mono" : ""}`}
-      >
+      <p className="text-xs text-slate-500 mb-0.5 sm:mb-1">{label}</p>
+      <p className={`text-sm sm:text-base text-white ${mono ? "font-mono" : ""}`}>
         {value}
       </p>
+      {subvalue && (
+        <p className="text-xs text-slate-400 mt-0.5">{subvalue}</p>
+      )}
     </div>
   );
 }
