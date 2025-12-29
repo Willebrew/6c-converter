@@ -52,12 +52,12 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-slate-900">
       <div className="min-h-screen flex flex-col">
         {/* Header */}
         <header className="pt-8 pb-4 px-4 sm:pt-12 sm:pb-6">
           <div className="max-w-xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-500 mb-4 sm:mb-6 shadow-lg shadow-emerald-500/25">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500 mb-4 sm:mb-6">
               <svg
                 className="w-8 h-8 sm:w-10 sm:h-10 text-white"
                 fill="none"
@@ -85,7 +85,7 @@ export default function Home() {
         <main className="flex-1 px-4 pb-8">
           <div className="max-w-xl mx-auto">
             {/* Input Card */}
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-700/50 shadow-xl">
+            <div className="bg-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-700">
               <form onSubmit={handleSubmit}>
                 <label
                   htmlFor="hex"
@@ -99,7 +99,7 @@ export default function Home() {
                   value={hex}
                   onChange={(e) => setHex(e.target.value.toUpperCase())}
                   placeholder="Enter 24 or 28 character hex..."
-                  className="w-full px-4 py-3 sm:py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white font-mono text-sm sm:text-base placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all"
+                  className="w-full px-4 py-3 sm:py-4 bg-slate-900 border border-slate-600 rounded-xl text-white font-mono text-sm sm:text-base placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   spellCheck={false}
                   autoComplete="off"
                   autoCapitalize="characters"
@@ -108,7 +108,7 @@ export default function Home() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 disabled:from-slate-600 disabled:to-slate-600 text-white font-semibold py-3 sm:py-4 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-500/25 disabled:shadow-none"
+                    className="flex-1 bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-600 text-white font-semibold py-3 sm:py-4 px-6 rounded-xl transition-colors"
                   >
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">
@@ -138,7 +138,7 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={clearForm}
-                      className="px-4 sm:px-6 py-3 sm:py-4 bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 font-medium rounded-xl transition-all"
+                      className="px-4 sm:px-6 py-3 sm:py-4 bg-slate-700 hover:bg-slate-600 text-slate-300 font-medium rounded-xl transition-colors"
                     >
                       Clear
                     </button>
@@ -149,14 +149,14 @@ export default function Home() {
 
             {/* Error */}
             {error && (
-              <div className="mt-4 sm:mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl sm:rounded-2xl">
+              <div className="mt-4 sm:mt-6 p-4 bg-red-900 border border-red-700 rounded-xl sm:rounded-2xl">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 w-5 h-5 mt-0.5">
                     <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="text-red-400 text-sm sm:text-base">{error}</p>
+                  <p className="text-red-300 text-sm sm:text-base">{error}</p>
                 </div>
               </div>
             )}
@@ -165,8 +165,8 @@ export default function Home() {
             {result && (
               <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6">
                 {/* Primary Result */}
-                <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
-                  <p className="text-emerald-400/80 text-xs sm:text-sm font-medium uppercase tracking-wider mb-1 sm:mb-2">
+                <div className="bg-emerald-900 border border-emerald-700 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+                  <p className="text-emerald-300 text-xs sm:text-sm font-medium uppercase tracking-wider mb-1 sm:mb-2">
                     Decoded Tag Number
                   </p>
                   <p className="text-2xl sm:text-3xl md:text-4xl font-mono font-bold text-white tracking-wider">
@@ -175,9 +175,9 @@ export default function Home() {
                 </div>
 
                 {/* Details Card */}
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-700/50 overflow-hidden">
+                <div className="bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-700 overflow-hidden">
                   {/* Agency Section */}
-                  <div className="p-4 sm:p-6 border-b border-slate-700/50">
+                  <div className="p-4 sm:p-6 border-b border-slate-700">
                     <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
                       Agency Information
                     </h3>
@@ -197,7 +197,7 @@ export default function Home() {
                   </div>
 
                   {/* Tag Details Section */}
-                  <div className="p-4 sm:p-6 border-b border-slate-700/50">
+                  <div className="p-4 sm:p-6 border-b border-slate-700">
                     <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
                       Tag Details
                     </h3>
@@ -215,7 +215,7 @@ export default function Home() {
 
                   {/* Classification Section */}
                   {result.classification.assigned && (
-                    <div className="p-4 sm:p-6 border-b border-slate-700/50">
+                    <div className="p-4 sm:p-6 border-b border-slate-700">
                       <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
                         Vehicle Classification
                       </h3>
@@ -229,7 +229,7 @@ export default function Home() {
                   )}
 
                   {/* Raw Data Section */}
-                  <div className="p-4 sm:p-6 bg-slate-900/30">
+                  <div className="p-4 sm:p-6 bg-slate-900">
                     <h3 className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider mb-3 sm:mb-4">
                       Raw Data
                     </h3>
