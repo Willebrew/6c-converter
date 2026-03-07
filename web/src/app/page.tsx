@@ -1,13 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Decoded6CTOC } from "@/lib/decoder";
+import { convertToWiegand, WiegandResult } from "@/lib/wiegand";
 
 export default function Home() {
   const [hex, setHex] = useState("");
   const [result, setResult] = useState<Decoded6CTOC | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const wiegand = useMemo<WiegandResult | null>(() => {
+    if (!result) return null;
+    return convertToWiegand(result.agencyCode, result.transponderSerialNumber);
+  }, [result]);
+
+  const copyToClipboard = async (text: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      // clipboard not available
+    }
+  };
 
   const decode = async (hexValue: string) => {
     if (!hexValue.trim()) {
@@ -216,6 +233,71 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+
+                {/* Wiegand Conversion */}
+                {wiegand && (
+                  <div className="py-6 border-t border-neutral-800">
+                    <p className="text-xs text-neutral-500 uppercase tracking-wider mb-6">
+                      Wiegand Conversion
+                    </p>
+                    <div className="space-y-8">
+                      {wiegand.formats.map((format) => (
+                        <div key={format.name} className="space-y-3">
+                          <p className="text-xs font-mono text-neutral-500 uppercase tracking-widest">
+                            {format.name}
+                          </p>
+                          <div className="grid grid-cols-2 gap-x-8 gap-y-3">
+                            <div>
+                              <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">
+                                Facility Code
+                              </p>
+                              <p className="text-lg font-mono">{format.facilityCode}</p>
+                              {format.facilityOverflow && (
+                                <p className="text-xs text-neutral-500 mt-1">
+                                  Truncated ({format.facilityBits}-bit max)
+                                </p>
+                              )}
+                            </div>
+                            <div>
+                              <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">
+                                Card Number
+                              </p>
+                              <p className="text-lg font-mono">{format.idNumber}</p>
+                              {format.idOverflow && (
+                                <p className="text-xs text-neutral-500 mt-1">
+                                  Truncated ({format.idBits}-bit max)
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">
+                              Binary
+                            </p>
+                            <div className="flex items-center gap-3">
+                              <span className="font-mono text-sm text-neutral-400 break-all flex-1">
+                                {format.binary}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => copyToClipboard(format.binary, format.name)}
+                                className="shrink-0 px-3 py-1 border border-neutral-800 hover:border-neutral-600 text-neutral-500 hover:text-white text-xs uppercase tracking-wider transition-colors"
+                              >
+                                {copiedId === format.name ? "Copied" : "Copy"}
+                              </button>
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-xs text-neutral-500 uppercase tracking-wider mb-1">
+                              Hex
+                            </p>
+                            <p className="font-mono text-sm text-neutral-400">{format.hex}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
