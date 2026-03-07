@@ -3,6 +3,7 @@
 // Format: agency_code -> [acronym, name, state/region]
 export const AGENCY_CODES: Record<number, [string, string, string]> = {
   0: ["Reserved", "Reserved", "N/A"],
+  14: ["I-PASS", "Illinois Tollway", "IL"],
   17: ["SC", "Southern Connector", "SC"],
   33: ["NCTA", "North Carolina Toll Authority", "NC"],
   35: ["FTE", "Florida's Turnpike Enterprise", "FL"],
