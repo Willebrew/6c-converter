@@ -10,11 +10,14 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [facilityCode, setFacilityCode] = useState<string>("");
 
   const wiegand = useMemo<WiegandResult | null>(() => {
     if (!result) return null;
-    return convertToWiegand(result.agencyCode, result.transponderSerialNumber);
-  }, [result]);
+    const fc = facilityCode !== "" ? parseInt(facilityCode, 10) : result.agencyCode;
+    if (isNaN(fc)) return convertToWiegand(result.agencyCode, result.transponderSerialNumber);
+    return convertToWiegand(fc, result.transponderSerialNumber);
+  }, [result, facilityCode]);
 
   const copyToClipboard = async (text: string, id: string) => {
     try {
@@ -66,6 +69,7 @@ export default function Home() {
     setHex("");
     setResult(null);
     setError(null);
+    setFacilityCode("");
   };
 
   return (
@@ -240,6 +244,22 @@ export default function Home() {
                     <p className="text-xs text-neutral-500 uppercase tracking-wider mb-6">
                       Wiegand Conversion
                     </p>
+                    <div className="mb-6">
+                      <p className="text-xs text-neutral-500 uppercase tracking-wider mb-2">
+                        Facility Code
+                      </p>
+                      <input
+                        type="number"
+                        value={facilityCode}
+                        onChange={(e) => setFacilityCode(e.target.value)}
+                        placeholder={String(result.agencyCode)}
+                        className="w-32 px-0 py-2 bg-transparent border-0 border-b border-neutral-800 text-white text-lg font-mono placeholder-neutral-600 focus:outline-none focus:border-white transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        min={0}
+                      />
+                      <p className="text-xs text-neutral-600 mt-1">
+                        {facilityCode === "" ? `Default: agency code ${result.agencyCode}` : "Custom"}
+                      </p>
+                    </div>
                     <div className="space-y-8">
                       {wiegand.formats.map((format) => (
                         <div key={format.name} className="space-y-3">

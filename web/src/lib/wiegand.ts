@@ -50,7 +50,7 @@ function truncateToFit(value: number, bits: number): number {
 }
 
 export function convertToWiegand(
-  agencyCode: number,
+  facilityCodeInput: number,
   transponderSerialNumber: number
 ): WiegandResult {
   const formatDefs = [
@@ -60,9 +60,9 @@ export function convertToWiegand(
   ];
 
   const formats: WiegandFormat[] = formatDefs.map((def) => {
-    const facilityOverflow = checkOverflow(agencyCode, def.facilityBits);
+    const facilityOverflow = checkOverflow(facilityCodeInput, def.facilityBits);
     const idOverflow = checkOverflow(transponderSerialNumber, def.idBits);
-    const facilityCode = truncateToFit(agencyCode, def.facilityBits);
+    const facilityCode = truncateToFit(facilityCodeInput, def.facilityBits);
     const idNumber = truncateToFit(transponderSerialNumber, def.idBits);
     const binary = buildWiegandBinary(
       facilityCode,
