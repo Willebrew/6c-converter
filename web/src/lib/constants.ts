@@ -7,6 +7,7 @@ export const AGENCY_CODES: Record<number, [string, string, string]> = {
   33: ["NCTA", "North Carolina Toll Authority", "NC"],
   35: ["FTE", "Florida's Turnpike Enterprise", "FL"],
   55: ["OTA", "Oklahoma Turnpike Authority", "OK"],
+  69: ["NTTA", "North Texas Tollway Authority", "TX"],
   61: ["HDBC", "Halifax Dartmouth Bridge Commission", "NS"],
   64: ["FTE", "Florida's Turnpike Enterprise", "FL"],
   65: ["FTE", "Florida's Turnpike Enterprise", "FL"],
